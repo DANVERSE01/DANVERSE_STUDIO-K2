@@ -1,0 +1,28 @@
+{
+  "name": "DANVERSE Studio K2",
+  "short_name": "DANVERSE",
+  "description": "AI-Powered Creative Studio with 3D Canvas, Neural Tunnels, and Bioluminescent AI Core",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#00ffcc",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "categories": ["design", "creative", "portfolio", "3d"]
+}
