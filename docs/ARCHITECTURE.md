@@ -1,377 +1,53 @@
-# Architecture Documentation
+# Architecture Blueprint: DANVERSE Studio K2
 
-## Overview
+## 1. Overview
 
-DANVERSE Studio K2 is built with a modern, scalable architecture optimized for 3D performance and maintainability.
+The DANVERSE Studio K2 architecture is a high-performance, scroll-driven spatial interface built on the Next.js App Router. It strictly separates the 3D rendering layer (WebGL/Three.js) from the 2D content layer (HTML/Tailwind CSS) to ensure maximum performance and maintainability. This refactored architecture is based on the Senior CTO's recommendations, focusing on a robust data layer simulation and enhanced security.
 
-## System Architecture
+## 2. Core Architectural Principles
 
-```
-┌────────────────────────────────────────┐
-│          User Interface (Next.js)           │
-│  ┌──────────────────────────────────┐  │
-│  │    App Router (page.tsx)        │  │
-│  └─────────────┬─────────────────────┘  │
-│                │                         │
-│       ┌────────┼──────────┐            │
-│       │  Experience.tsx  │            │
-│       └────────┬──────────┘            │
-└────────────────┴────────────────────────┘
-                 │
-    ┌────────────┼─────────────┐
-    │  React Three Fiber Layer    │
-    │  ┌─────────────────────┐  │
-    │  │  Scene.tsx        │  │
-    │  │  - AICore        │  │
-    │  │  - NeuralTunnel  │  │
-    │  │  - Gallery       │  │
-    │  └────────┬───────────┘  │
-    └─────────────┴─────────────┘
-                 │
-    ┌────────────┼─────────────┐
-    │  Three.js Engine Layer    │
-    │  - WebGL Renderer        │
-    │  - Scene Graph           │
-    │  - Shader Materials      │
-    │  - Physics (Rapier)      │
-    └───────────────────────────┘
-```
+| Principle | Description | Implementation |
+| :--- | :--- | :--- |
+| **Separation of Concerns** | Strict division between 3D rendering and HTML content/UI. | `Scene.tsx` (3D) is fixed position; `page.tsx` (HTML) is scrollable overlay. |
+| **Performance First** | Utilize GPU acceleration and optimized rendering techniques. | `R3F` (React Three Fiber), `EffectComposer` (Bloom), `dpr` setting, custom GLSL shaders. |
+| **Data Readiness** | Simulate a production-ready backend for dynamic content. | `Prisma` schema (`schema.prisma`) and static data layer (`projects.ts`). |
+| **Scroll-Driven Cinematics** | Use scroll position to drive 3D camera and object animations. | Custom `ScrollRig` and `ScrollCamera` components to map scroll Y to 3D scene changes. |
+| **Security** | Proactive security measures at the framework level. | Strict security headers (CSP, HSTS) configured in `next.config.mjs`. |
 
-## Component Hierarchy
+## 3. Data Flow and Component Hierarchy
 
-### 1. Application Layer (Next.js)
+### 3.1. Data Layer Simulation
 
-**Purpose**: Server-side rendering, routing, and initial HTML delivery
+The project simulates a dynamic data layer to ensure the architecture is ready for a full-stack implementation.
 
-**Key Files**:
-- `src/app/layout.tsx` - Root layout with metadata
-- `src/app/page.tsx` - Main entry point
-- `src/app/globals.css` - Global styles
+- **Prisma Schema (`prisma/schema.prisma`):** Defines the structure for `Project` and `Service` models, ready for connection to a PostgreSQL database.
+- **Static Data (`src/data/projects.ts`):** Provides placeholder data used by the HTML UI (`page.tsx`) to render services and portfolio items, mimicking a CMS fetch.
 
-**Responsibilities**:
-- SEO optimization
-- Meta tags and Open Graph
-- Font loading
-- Initial page structure
+### 3.2. Component Interaction (Scroll-Based)
 
-### 2. Canvas Layer (React Three Fiber)
+1.  **`src/app/page.tsx` (HTML Overlay):**
+    -   Renders the fixed `Scene` component.
+    -   Renders the scrollable HTML content (Hero, Services, Portfolio, Contact sections).
+    -   Uses `framer-motion` for smooth HTML transitions.
+2.  **`src/components/3d/Scene.tsx` (3D Canvas):**
+    -   Wraps the entire 3D experience in `<Canvas>`.
+    -   Contains the `<ScrollRig>` and `<ScrollCamera>` to manage scroll-based 3D state.
+    -   Renders all 3D elements (`NeuralBrain`, `GlassCard`) within `<ScrollSection>` components, which are positioned based on the scroll progress.
+3.  **`src/components/3d/NeuralBrain.tsx` (Core Model):**
+    -   Renders the central 3D object.
+    -   Uses a custom `NeuralMaterial` (GLSL shader) for the bioluminescent effect.
 
-**Purpose**: Bridge between React and Three.js
+## 4. GLSL Shader Logic (`NeuralBrain.tsx`)
 
-**Key Components**:
+The core visual effect is driven by the custom `NeuralMaterial` shader, which is a key part of the project's aesthetic.
 
-#### Experience.tsx
-```typescript
-// Canvas wrapper with configuration
-- Manages WebGL context
-- Sets up camera and lights
-- Handles resize events
-- Provides performance monitoring
-```
+| Shader Component | Purpose | Key Logic |
+| :--- | :--- | :--- |
+| **Vertex Shader** | Controls the geometry's shape and animation. | Uses `sin(time)` and `position.y` to create a subtle, pulsing, liquid-like distortion along the Y-axis, giving the brain a "breathing" effect. |
+| **Fragment Shader** | Controls the color, glow, and final appearance. | Calculates distance from the center (`dist`) to create a central glow. Uses `mix(colorA, colorB, ...)` to blend the Cyan and Magenta colors based on time and position, simulating neural activity and bioluminescence. |
 
-#### Scene.tsx
-```typescript
-// Main 3D scene orchestration
-- Composes all 3D elements
-- Manages scene transitions
-- Coordinates animations
-- Handles scroll-based updates
-```
+## 5. Security and Performance
 
-### 3. 3D Components Layer
-
-#### AICore.tsx
-```typescript
-// Bioluminescent AI visualization
-Features:
-- 10,000+ particle system
-- Custom GLSL shaders
-- Audio-reactive animations
-- Morphing geometries
-
-Performance:
-- Instanced rendering
-- GPU-based particle updates
-- Shader LOD levels
-```
-
-#### NeuralTunnel.tsx
-```typescript
-// Tunnel navigation system
-Features:
-- Procedural geometry generation
-- Particle flow simulation
-- Camera path animations
-- Depth-of-field effects
-
-Performance:
-- Geometry caching
-- Frustum culling
-- Dynamic particle count
-```
-
-#### FloatingGallery.tsx
-```typescript
-// Zero-gravity project showcase
-Features:
-- Physics-based floating
-- Interactive raycasting
-- Smooth transitions
-- Lazy loading textures
-
-Performance:
-- Rapier physics optimization
-- Texture compression
-- LOD for distant objects
-```
-
-### 4. State Management
-
-**Zustand Stores**:
-
-```typescript
-// scrollStore.ts
-interface ScrollStore {
-  progress: number;        // 0-1 scroll progress
-  section: string;         // Current section
-  direction: 'up' | 'down';
-  setProgress: (val: number) => void;
-}
-```
-
-**Why Zustand?**
-- Minimal boilerplate
-- No providers needed
-- TypeScript-first
-- Excellent performance
-- DevTools support
-
-### 5. Animation System
-
-**GSAP Timeline**:
-```typescript
-const timeline = gsap.timeline({
-  scrollTrigger: {
-    trigger: '.section',
-    start: 'top top',
-    end: 'bottom top',
-    scrub: 1,
-  },
-});
-```
-
-**Framer Motion**:
-```typescript
-// For UI animations
-motion.div({
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6 },
-});
-```
-
-## Data Flow
-
-### User Interaction Flow
-
-```
-User Scroll
-    ↓
-Scroll Event Listener (throttled)
-    ↓
-Zustand Store Update
-    ↓
-React Component Re-render
-    ↓
-Three.js Scene Update (via useFrame)
-    ↓
-GPU Rendering
-```
-
-### 3D Rendering Pipeline
-
-```
-Component Mount
-    ↓
-Create Three.js Objects
-    ↓
-Load Textures/Geometries
-    ↓
-Compile Shaders
-    ↓
-Add to Scene Graph
-    ↓
-Animation Loop (60 FPS)
-    └──> Update Uniforms
-    └──> Physics Step
-    └──> Render Frame
-```
-
-## Performance Optimizations
-
-### 1. Code Splitting
-
-```typescript
-// Dynamic imports for heavy components
-const Experience = dynamic(() => import('@/components/canvas/Experience'), {
-  ssr: false,
-  loading: () => <LoadingSpinner />,
-});
-```
-
-### 2. Shader Optimization
-
-```glsl
-// Use uniform blocks
-layout(std140) uniform Matrices {
-    mat4 projection;
-    mat4 view;
-};
-
-// Minimize texture lookups
-vec4 color = texture(tex, uv);
-```
-
-### 3. Geometry Instancing
-
-```typescript
-// Render 10,000 particles with 1 draw call
-<instancedMesh args={[geometry, material, 10000]}>
-  <bufferGeometry />
-  <meshStandardMaterial />
-</instancedMesh>
-```
-
-### 4. Texture Management
-
-```typescript
-// Compressed textures
-const texture = useTexture('/texture.ktx2');
-
-// Lazy loading
-const { scene } = useGLTF('/model.glb', true);
-```
-
-## Security Considerations
-
-### Content Security Policy
-
-```typescript
-// next.config.js headers
-Headers: [
-  {
-    key: 'Content-Security-Policy',
-    value: "default-src 'self'; script-src 'self' 'unsafe-eval';",
-  },
-];
-```
-
-### Input Sanitization
-
-```typescript
-// Validate user inputs
-import { z } from 'zod';
-
-const schema = z.object({
-  email: z.string().email(),
-  message: z.string().max(500),
-});
-```
-
-## Deployment Architecture
-
-### Build Process
-
-```
-Source Code
-    ↓
-TypeScript Compilation
-    ↓
-Next.js Build
-    └──> Static Pages
-    └──> Server Components
-    └──> Client Bundles
-    ↓
-Optimization
-    └──> Minification
-    └──> Tree Shaking
-    └──> Image Optimization
-    ↓
-Deploy to Vercel (Manual)
-```
-
-### CDN Strategy
-
-```
-User Request
-    ↓
-Vercel Edge Network
-    └──> Cache Hit? → Return Cached
-    └──> Cache Miss? → Origin Server
-```
-
-## Monitoring & Analytics
-
-### Performance Metrics
-
-```typescript
-// Custom performance tracking
-const observer = new PerformanceObserver((list) => {
-  for (const entry of list.getEntries()) {
-    console.log('Metric:', entry.name, entry.value);
-  }
-});
-
-observer.observe({ entryTypes: ['measure', 'navigation'] });
-```
-
-### Error Tracking
-
-```typescript
-// Error boundaries for 3D components
-class ThreeErrorBoundary extends React.Component {
-  componentDidCatch(error, errorInfo) {
-    // Log to service
-    console.error('3D Error:', error, errorInfo);
-  }
-}
-```
-
-## Testing Strategy
-
-### Unit Tests
-- Utility functions
-- Store logic
-- Data transformations
-
-### Component Tests
-- UI components
-- User interactions
-- State changes
-
-### Integration Tests
-- 3D scene rendering
-- Animation sequences
-- Performance benchmarks
-
-## Future Considerations
-
-### Scalability
-- Implement virtual scrolling for large datasets
-- Add server-side caching layer
-- Optimize for mobile GPU constraints
-
-### Features
-- WebXR support for VR/AR
-- Real-time multiplayer interactions
-- AI-generated content
-
-### Performance
-- WASM for physics calculations
-- WebGPU when widely supported
-- Adaptive quality based on device
-
----
-
-**Last Updated**: 2025-11-29  
-**Version**: 2.0.0
+- **Security Headers:** Implemented in `next.config.mjs` to mitigate common web vulnerabilities (XSS, Clickjacking, MIME-sniffing).
+- **Lighthouse CI:** Assertions are configured to enforce a minimum performance score of 90+ and strict core web vitals limits.
+- **Resource Management:** The `ScrollRig` architecture ensures that only the necessary 3D elements are active or in focus for the current scroll section, optimizing GPU load.

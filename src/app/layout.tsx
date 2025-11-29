@@ -21,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={rajdhani.variable}>
-      <body className="font-rajdhani">{children}</body>
+      <body className="font-sans bg-void text-white/90">{children}</body>
     </html>
   );
 }
