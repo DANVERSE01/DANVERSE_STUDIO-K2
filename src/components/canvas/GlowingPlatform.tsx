@@ -16,6 +16,7 @@ export default function GlowingPlatform({
   const innerRingRef = useRef<THREE.Mesh>(null);
   const middleRingRef = useRef<THREE.Mesh>(null);
   const outerRingRef = useRef<THREE.Mesh>(null);
+  const extraGlowRef = useRef<THREE.Mesh>(null);
   const centerRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
@@ -24,21 +25,26 @@ export default function GlowingPlatform({
     const slowPulse = Math.sin(time * 0.5) * 0.5 + 0.5;
 
     if (innerRingRef.current) {
-      (innerRingRef.current.material as THREE.MeshBasicMaterial).opacity = 0.4 + pulse * 0.3;
+      (innerRingRef.current.material as THREE.MeshBasicMaterial).opacity = 0.5 + pulse * 0.3;
     }
     
     if (middleRingRef.current) {
-      (middleRingRef.current.material as THREE.MeshBasicMaterial).opacity = 0.25 + pulse * 0.2;
+      (middleRingRef.current.material as THREE.MeshBasicMaterial).opacity = 0.35 + pulse * 0.2;
       middleRingRef.current.rotation.z = time * 0.1;
     }
     
     if (outerRingRef.current) {
-      (outerRingRef.current.material as THREE.MeshBasicMaterial).opacity = 0.15 + slowPulse * 0.1;
+      (outerRingRef.current.material as THREE.MeshBasicMaterial).opacity = 0.25 + slowPulse * 0.15;
       outerRingRef.current.rotation.z = -time * 0.05;
     }
 
+    if (extraGlowRef.current) {
+      (extraGlowRef.current.material as THREE.MeshBasicMaterial).opacity = 0.15 + slowPulse * 0.1;
+      extraGlowRef.current.rotation.z = time * 0.03;
+    }
+
     if (centerRef.current) {
-      (centerRef.current.material as THREE.MeshBasicMaterial).opacity = 0.3 + pulse * 0.2;
+      (centerRef.current.material as THREE.MeshBasicMaterial).opacity = 0.4 + pulse * 0.2;
     }
   });
 
@@ -50,28 +56,40 @@ export default function GlowingPlatform({
         <meshBasicMaterial 
           color="#0a0a1a" 
           transparent 
-          opacity={0.5}
+          opacity={0.6}
           side={THREE.DoubleSide}
         />
       </mesh>
 
-      {/* Inner ring - Cyan */}
+      {/* Inner ring - Cyan - BRIGHTER */}
       <mesh ref={innerRingRef} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[radius * 0.75, radius * 0.85, 64]} />
+        <ringGeometry args={[radius * 0.75, radius * 0.9, 64]} />
         <meshBasicMaterial 
           color="#00ffcc" 
           transparent 
-          opacity={0.4}
+          opacity={0.5}
           side={THREE.DoubleSide}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
 
-      {/* Middle ring - Purple */}
+      {/* Middle ring - Purple - LARGER */}
       <mesh ref={middleRingRef} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[radius * 0.9, radius * 1.0, 64]} />
+        <ringGeometry args={[radius * 1.0, radius * 1.3, 64]} />
         <meshBasicMaterial 
           color="#ff00ff" 
+          transparent 
+          opacity={0.35}
+          side={THREE.DoubleSide}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+
+      {/* Outer ring - Magenta glow - MUCH LARGER */}
+      <mesh ref={outerRingRef} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[radius * 1.4, radius * 1.6, 64]} />
+        <meshBasicMaterial 
+          color="#ff0080" 
           transparent 
           opacity={0.25}
           side={THREE.DoubleSide}
@@ -79,11 +97,11 @@ export default function GlowingPlatform({
         />
       </mesh>
 
-      {/* Outer ring - Magenta glow */}
-      <mesh ref={outerRingRef} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[radius * 1.05, radius * 1.2, 64]} />
+      {/* NEW: Extra outer glow ring - MAXIMUM SIZE */}
+      <mesh ref={extraGlowRef} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[radius * 1.65, radius * 1.85, 64]} />
         <meshBasicMaterial 
-          color="#ff0080" 
+          color="#00ffcc" 
           transparent 
           opacity={0.15}
           side={THREE.DoubleSide}
@@ -110,17 +128,17 @@ function GridLines({ radius }: { radius: number }) {
   const points = [];
   const segments = 32;
   
-  // Radial lines
+  // Radial lines - EXTENDED
   for (let i = 0; i < segments; i++) {
     const angle = (i / segments) * Math.PI * 2;
     points.push(
       Math.cos(angle) * radius * 0.3, 0, Math.sin(angle) * radius * 0.3,
-      Math.cos(angle) * radius * 1.1, 0, Math.sin(angle) * radius * 1.1
+      Math.cos(angle) * radius * 1.5, 0, Math.sin(angle) * radius * 1.5
     );
   }
 
-  // Concentric circles
-  for (let r = 0.5; r <= 1.1; r += 0.2) {
+  // Concentric circles - MORE RINGS
+  for (let r = 0.5; r <= 1.5; r += 0.2) {
     for (let i = 0; i < segments; i++) {
       const angle1 = (i / segments) * Math.PI * 2;
       const angle2 = ((i + 1) / segments) * Math.PI * 2;
@@ -144,7 +162,7 @@ function GridLines({ radius }: { radius: number }) {
       <lineBasicMaterial 
         color="#00ffcc" 
         transparent 
-        opacity={0.15}
+        opacity={0.2}
         blending={THREE.AdditiveBlending}
       />
     </lineSegments>
