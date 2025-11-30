@@ -2,6 +2,7 @@
 import Scene from '@/components/3d/Scene';
 import TechnicalHUD from '@/components/ui/TechnicalHUD';
 import BlueprintSection from '@/components/ui/BlueprintSection';
+import YellowConnectorLines from '@/components/ui/YellowConnectorLines';
 import { SERVICES } from '@/data/projects';
 import { useRef } from 'react';
 import { motion, useScroll as useScrollMotion } from 'framer-motion';
@@ -28,6 +29,9 @@ export default function Home() {
 
       {/* Technical HUD Overlay */}
       <TechnicalHUD />
+      
+      {/* Yellow Connector Lines */}
+      <YellowConnectorLines />
       
       {/* HTML Scroll Overlay */}
       <div ref={scrollRef} className="absolute inset-0 z-10 overflow-y-scroll scroll-smooth">
