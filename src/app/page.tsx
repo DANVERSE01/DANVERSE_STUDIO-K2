@@ -3,6 +3,7 @@ import Scene from '@/components/3d/Scene';
 import TechnicalHUD from '@/components/ui/TechnicalHUD';
 import BlueprintSection from '@/components/ui/BlueprintSection';
 import YellowConnectorLines from '@/components/ui/YellowConnectorLines';
+import HolographicPortfolio from '@/components/ui/HolographicPortfolio';
 import { SERVICES } from '@/data/projects';
 import { useRef } from 'react';
 import { motion, useScroll as useScrollMotion } from 'framer-motion';
@@ -95,7 +96,7 @@ export default function Home() {
           </motion.div>
         </Section>
 
-        {/* Section 3: PORTFOLIO */}
+        {/* Section 3: PORTFOLIO - WITH HOLOGRAPHIC PORTFOLIO */}
         <Section className="text-center">
           <motion.div 
             className="max-w-6xl w-full p-8 pointer-events-auto"
@@ -110,22 +111,8 @@ export default function Home() {
             <p className="text-2xl text-white/80 mb-12">
               A curated selection of projects showcasing the fusion of AI and motion design.
             </p>
-            <div className="grid grid-cols-2 gap-6">
-              {['Cinematic Ads', 'Neural Tunnels', 'B2B Strategy', 'Luxury Automotive'].map((title, index) => (
-                <motion.div 
-                  key={index}
-                  className="aspect-video bg-gradient-to-br from-cyan-500/10 via-magenta-500/10 to-yellow-500/10 rounded-xl border border-white/20 flex items-center justify-center group hover:border-magenta-500 transition-all hover:shadow-[0_0_40px_rgba(255,0,255,0.3)]"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <div className="text-2xl font-bold text-white/50 group-hover:text-white/90 transition-all">
-                    {title}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+            {/* HOLOGRAPHIC PORTFOLIO COMPONENT */}
+            <HolographicPortfolio />
           </motion.div>
         </Section>
 
@@ -167,7 +154,7 @@ export default function Home() {
           </motion.div>
         </Section>
 
-        {/* Blueprint Section - NEW */}
+        {/* Blueprint Section */}
         <BlueprintSection />
 
       </div>
