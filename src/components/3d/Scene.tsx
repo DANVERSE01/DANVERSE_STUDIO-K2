@@ -26,6 +26,7 @@ export default function Scene() {
         }}
         dpr={[1, 2]}
       >
+        {/* Enhanced gradient background */}
         <color attach="background" args={['#0a0a1a']} />
         
         {/* Enhanced Lighting for stronger colors */}
@@ -47,18 +48,33 @@ export default function Scene() {
             {/* Cinematic camera control */}
             <ScrollCamera sections={NUM_SECTIONS} />
 
-            {/* Section 1: HERO - Enhanced Neural Brain */}
+            {/* Section 1: HERO - Enhanced Neural Brain + GLASS CARDS */}
             <ScrollSection page={0}>
               <group position={[0, 0, 0]}>
                 {/* Main Brain */}
                 <LiquidMetalBrain position={[0, 0, 0]} scale={1} />
                 
-                {/* Volumetric Smoke around brain */}
-                <VolumetricSmoke count={400} radius={3} color="#00ffcc" opacity={0.2} />
-                <VolumetricSmoke count={300} radius={3.5} color="#ff00ff" opacity={0.15} />
+                {/* STRONGER Volumetric Smoke around brain - INCREASED OPACITY */}
+                <VolumetricSmoke count={500} radius={3} color="#00ffcc" opacity={0.5} />
+                <VolumetricSmoke count={400} radius={3.5} color="#ff00ff" opacity={0.4} />
+                <VolumetricSmoke count={300} radius={4} color="#ff0080" opacity={0.3} />
                 
-                {/* Glowing Platform */}
-                <GlowingPlatform position={[0, -2.5, 0]} radius={2.8} />
+                {/* Enhanced Glowing Platform */}
+                <GlowingPlatform position={[0, -2.5, 0]} radius={3.2} />
+                
+                {/* NEW: Glass Cards in HERO Section - Left Side */}
+                <group position={[-4, 0, 0]}>
+                  <GlassCard position={[0, 1.5, 0]} title="AI CORE" icon="cpu" />
+                  <GlassCard position={[0, 0, 0]} title="NEURAL NET" icon="brain" />
+                  <GlassCard position={[0, -1.5, 0]} title="QUANTUM" icon="zap" />
+                </group>
+                
+                {/* NEW: Glass Cards in HERO Section - Right Side */}
+                <group position={[4, 0, 0]}>
+                  <GlassCard position={[0, 1.5, 0]} title="RENDER" icon="film" />
+                  <GlassCard position={[0, 0, 0]} title="CREATIVE" icon="star" />
+                  <GlassCard position={[0, -1.5, 0]} title="STRATEGY" icon="target" />
+                </group>
               </group>
             </ScrollSection>
 
@@ -84,7 +100,7 @@ export default function Scene() {
             <ScrollSection page={3}>
               <group position={[0, 0, 0]}>
                 <GlassCard position={[0, 0, 0]} title="COLLABORATE" icon="message" />
-                <VolumetricSmoke count={150} radius={2} color="#ff00ff" opacity={0.25} />
+                <VolumetricSmoke count={200} radius={2} color="#ff00ff" opacity={0.4} />
               </group>
             </ScrollSection>
 
