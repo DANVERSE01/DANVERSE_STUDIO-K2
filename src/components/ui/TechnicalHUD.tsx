@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import FlowDiagram from './FlowDiagram';
+import AcademyFlowchart from './AcademyFlowchart';
 
 export default function TechnicalHUD() {
   const [metrics, setMetrics] = useState({
@@ -85,74 +87,11 @@ export default function TechnicalHUD() {
         </div>
       </motion.div>
 
-      {/* Left Side Panel - Service Status */}
-      <motion.div 
-        className="fixed left-4 top-1/2 -translate-y-1/2 z-40 pointer-events-none"
-        initial={{ opacity: 0, x: -30 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-      >
-        <div className="bg-black/20 backdrop-blur-md border border-cyan-500/20 rounded-lg p-3 w-48">
-          <div className="text-cyan-400 font-mono text-xs mb-3 font-bold">SERVICES ONLINE</div>
-          <div className="space-y-2 text-xs font-mono text-gray-400">
-            <ServiceIndicator label="AI CORE" status="active" />
-            <ServiceIndicator label="RENDER ENGINE" status="active" />
-            <ServiceIndicator label="NEURAL NET" status="active" />
-            <ServiceIndicator label="QUANTUM PROC" status="standby" />
-          </div>
-        </div>
-      </motion.div>
+      {/* Flow Diagram (Left Side) - NEW COMPONENT */}
+      <FlowDiagram />
 
-      {/* Right Side Panel - System Monitor */}
-      <motion.div 
-        className="fixed right-4 top-1/2 -translate-y-1/2 z-40 pointer-events-none"
-        initial={{ opacity: 0, x: 30 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-      >
-        <div className="bg-black/20 backdrop-blur-md border border-magenta-500/20 rounded-lg p-3 w-48">
-          <div className="text-magenta-400 font-mono text-xs mb-3 font-bold">SYSTEM MONITOR</div>
-          <div className="space-y-2 text-xs font-mono text-gray-400">
-            <MetricBar label="GPU" value={metrics.gpuLoad} color="cyan" />
-            <MetricBar label="CPU" value={65} color="magenta" />
-            <MetricBar label="RAM" value={72} color="cyan" />
-            <MetricBar label="VRAM" value={58} color="magenta" />
-          </div>
-        </div>
-      </motion.div>
+      {/* Academy Flowchart (Right Side) - NEW COMPONENT */}
+      <AcademyFlowchart />
     </>
-  );
-}
-
-function ServiceIndicator({ label, status }: { label: string; status: 'active' | 'standby' }) {
-  return (
-    <div className="flex items-center justify-between">
-      <span>{label}</span>
-      <div className="flex items-center gap-1">
-        <div className={`w-2 h-2 rounded-full ${
-          status === 'active' ? 'bg-cyan-400 animate-pulse' : 'bg-gray-600'
-        }`} />
-        <span className="text-[10px]">{status === 'active' ? 'ON' : 'OFF'}</span>
-      </div>
-    </div>
-  );
-}
-
-function MetricBar({ label, value, color }: { label: string; value: number; color: 'cyan' | 'magenta' }) {
-  return (
-    <div>
-      <div className="flex justify-between mb-1">
-        <span>{label}</span>
-        <span className={`text-${color}-400`}>{value.toFixed(0)}%</span>
-      </div>
-      <div className="w-full h-1 bg-gray-800 rounded-full overflow-hidden">
-        <motion.div 
-          className={`h-full bg-${color}-500`}
-          initial={{ width: 0 }}
-          animate={{ width: `${value}%` }}
-          transition={{ duration: 0.5 }}
-        />
-      </div>
-    </div>
   );
 }
