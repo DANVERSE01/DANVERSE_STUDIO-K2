@@ -1,11 +1,12 @@
 "use client";
 import Scene from '@/components/3d/Scene';
+import TechnicalHUD from '@/components/ui/TechnicalHUD';
+import BlueprintSection from '@/components/ui/BlueprintSection';
 import { SERVICES } from '@/data/projects';
-import { useScroll } from '@react-three/drei';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { motion, useScroll as useScrollMotion } from 'framer-motion';
 
-// Define the number of sections based on the blueprint (Hero, Services, Portfolio, Contact)
+// Define the number of sections
 const NUM_SECTIONS = 4;
 
 const Section = ({ children, className }: { children: React.ReactNode, className?: string }) => (
@@ -24,6 +25,9 @@ export default function Home() {
       <div className="fixed inset-0 z-0">
         <Scene />
       </div>
+
+      {/* Technical HUD Overlay */}
+      <TechnicalHUD />
       
       {/* HTML Scroll Overlay */}
       <div ref={scrollRef} className="absolute inset-0 z-10 overflow-y-scroll scroll-smooth">
@@ -31,18 +35,24 @@ export default function Home() {
         {/* Section 1: HERO */}
         <Section className="text-center">
           <motion.div 
-            className="text-white pointer-events-auto"
+            className="text-white pointer-events-auto max-w-5xl px-8"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
           >
-            <h1 className="text-7xl font-bold text-cyan-400 mb-4">
-              ACCELERATE YOUR VISION
+            <h1 className="text-8xl font-bold mb-6" style={{
+              background: 'linear-gradient(135deg, #00ffcc 0%, #ff00ff 50%, #ff0080 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
+              THE FUTURE IS INTELLIGENT
             </h1>
-            <p className="text-2xl text-white/80 mb-8">
-              From concept to cinematic reality, bypassing slow, traditional creative pipelines.
+            <p className="text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
+              Enterprise solutions to ceneror of liquid metal and bioluminescent fiber optics,
+              with glowing neural connections, refractives glass outer shell
             </p>
-            <button className="px-8 py-3 bg-magenta-500 text-white rounded-full font-bold hover:bg-magenta-400 transition-colors">
+            <button className="px-10 py-4 bg-gradient-to-r from-cyan-500 to-magenta-500 text-white rounded-full font-bold text-lg hover:shadow-[0_0_30px_rgba(0,255,204,0.5)] transition-all">
               See Quality
             </button>
           </motion.div>
@@ -50,81 +60,146 @@ export default function Home() {
 
         {/* Section 2: SERVICES */}
         <Section className="text-left">
-          <div className="max-w-4xl w-full p-8 pointer-events-auto">
-            <h2 className="text-5xl font-bold text-white mb-12">
-              AI & CREATIVE INTELLIGENCE
+          <motion.div 
+            className="max-w-6xl w-full p-8 pointer-events-auto"
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-6xl font-bold text-white mb-12">
+              AI & CREATIVE <span className="text-cyan-400">INTELLIGENCE</span>
             </h2>
             <div className="grid grid-cols-3 gap-8">
-              {SERVICES.map((service) => (
-                <div key={service.id} className="bg-white/5 backdrop-blur-sm p-6 rounded-lg border border-cyan-500/30 hover:border-cyan-500 transition-all">
-                  <h3 className="text-2xl font-bold text-cyan-400 mb-2">{service.title}</h3>
-                  <p className="text-white/70">{service.description}</p>
-                </div>
+              {SERVICES.map((service, index) => (
+                <motion.div 
+                  key={service.id} 
+                  className="bg-black/40 backdrop-blur-md p-8 rounded-xl border-2 border-cyan-500/30 hover:border-cyan-500 transition-all group hover:shadow-[0_0_30px_rgba(0,255,204,0.3)]"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <div className="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-cyan-500/40 transition-all">
+                    <div className="w-8 h-8 bg-cyan-400 rounded-full animate-pulse" />
+                  </div>
+                  <h3 className="text-3xl font-bold text-cyan-400 mb-3">{service.title}</h3>
+                  <p className="text-white/80 text-lg">{service.description}</p>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </Section>
 
         {/* Section 3: PORTFOLIO */}
-        <Section className="text-right">
-          <div className="max-w-4xl w-full p-8 pointer-events-auto">
-            <h2 className="text-5xl font-bold text-white mb-12">
-              RENDERED REALITIES
+        <Section className="text-center">
+          <motion.div 
+            className="max-w-6xl w-full p-8 pointer-events-auto"
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-6xl font-bold text-white mb-8">
+              RENDERED <span className="text-magenta-400">REALITIES</span>
             </h2>
-            <p className="text-xl text-white/80">
+            <p className="text-2xl text-white/80 mb-12">
               A curated selection of projects showcasing the fusion of AI and motion design.
             </p>
-            {/* Placeholder for Portfolio Grid */}
-          </div>
+            <div className="grid grid-cols-2 gap-6">
+              {['Cinematic Ads', 'Neural Tunnels', 'B2B Strategy', 'Luxury Automotive'].map((title, index) => (
+                <motion.div 
+                  key={index}
+                  className="aspect-video bg-gradient-to-br from-cyan-500/10 via-magenta-500/10 to-yellow-500/10 rounded-xl border border-white/20 flex items-center justify-center group hover:border-magenta-500 transition-all hover:shadow-[0_0_40px_rgba(255,0,255,0.3)]"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <div className="text-2xl font-bold text-white/50 group-hover:text-white/90 transition-all">
+                    {title}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </Section>
 
         {/* Section 4: CONTACT */}
         <Section className="text-center">
-          <div className="max-w-md w-full p-8 bg-white/5 backdrop-blur-md rounded-xl border border-magenta-500/30 pointer-events-auto">
-            <h2 className="text-4xl font-bold text-magenta-400 mb-6">
+          <motion.div 
+            className="max-w-md w-full p-10 bg-black/60 backdrop-blur-xl rounded-2xl border-2 border-magenta-500/40 pointer-events-auto shadow-[0_0_50px_rgba(255,0,255,0.2)]"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-5xl font-bold text-magenta-400 mb-8">
               COLLABORATE NOW
             </h2>
-            <form className="space-y-4">
-              <input type="text" placeholder="Name" className="w-full p-3 bg-black/50 border border-white/10 text-white rounded-lg focus:ring-2 focus:ring-magenta-500" />
-              <input type="email" placeholder="Email" className="w-full p-3 bg-black/50 border border-white/10 text-white rounded-lg focus:ring-2 focus:ring-magenta-500" />
-              <textarea placeholder="Project Brief" rows={4} className="w-full p-3 bg-black/50 border border-white/10 text-white rounded-lg focus:ring-2 focus:ring-magenta-500"></textarea>
-              <button type="submit" className="w-full p-3 bg-magenta-500 text-white rounded-lg font-bold hover:bg-magenta-400 transition-colors">
+            <form className="space-y-5">
+              <input 
+                type="text" 
+                placeholder="Name" 
+                className="w-full p-4 bg-black/70 border-2 border-white/20 text-white rounded-xl focus:ring-2 focus:ring-magenta-500 focus:border-magenta-500 transition-all" 
+              />
+              <input 
+                type="email" 
+                placeholder="Email" 
+                className="w-full p-4 bg-black/70 border-2 border-white/20 text-white rounded-xl focus:ring-2 focus:ring-magenta-500 focus:border-magenta-500 transition-all" 
+              />
+              <textarea 
+                placeholder="Project Brief" 
+                rows={4} 
+                className="w-full p-4 bg-black/70 border-2 border-white/20 text-white rounded-xl focus:ring-2 focus:ring-magenta-500 focus:border-magenta-500 transition-all"
+              />
+              <button 
+                type="submit" 
+                className="w-full p-4 bg-gradient-to-r from-magenta-600 to-magenta-500 text-white rounded-xl font-bold text-lg hover:shadow-[0_0_30px_rgba(255,0,255,0.5)] transition-all"
+              >
                 SEND MESSAGE
               </button>
             </form>
-          </div>
+          </motion.div>
         </Section>
 
+        {/* Blueprint Section - NEW */}
+        <BlueprintSection />
+
       </div>
 
-      {/* Global HUD Overlay (Fixed) */}
+      {/* Navigation Header */}
       <div className="fixed top-0 left-0 right-0 z-50 p-8 pointer-events-none">
-        {/* Top Left Logo/Title */}
-        <div className="absolute top-8 left-8">
-          <div className="text-white font-mono text-xl font-bold tracking-wider mb-1">
-            DANVERSE STUDIO
-          </div>
-          <div className="text-cyan-400 text-xs tracking-[0.3em] uppercase">
-            AI CREATIVE ECOSYSTEM
-          </div>
-        </div>
+        <div className="flex justify-between items-start">
+          {/* Logo */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="text-white font-mono text-2xl font-bold tracking-wider mb-1">
+              DANVERSE STUDIO
+            </div>
+            <div className="text-cyan-400 text-xs tracking-[0.3em] uppercase">
+              Enterprise AI Creative Ecosystem
+            </div>
+          </motion.div>
 
-        {/* Top Right Navigation (Placeholder) */}
-        <div className="absolute top-8 right-8">
-          <nav className="flex space-x-6 text-white/70 font-mono text-sm pointer-events-auto">
-            <a href="#services" className="hover:text-cyan-400 transition-colors">SERVICES</a>
-            <a href="#portfolio" className="hover:text-cyan-400 transition-colors">PORTFOLIO</a>
-            <a href="#contact" className="hover:text-cyan-400 transition-colors">CONTACT</a>
-          </nav>
-        </div>
-      </div>
-
-      {/* Bottom Right Info */}
-      <div className="fixed bottom-8 right-8 z-50 pointer-events-none text-right">
-        <div className="text-xs text-gray-500 font-mono space-y-1">
-          <div>RENDER MODE: GPU</div>
-          <div>FRAME RATE: 60fps</div>
-          <div>RESOLUTION: 4K</div>
+          {/* Navigation */}
+          <motion.nav 
+            className="flex space-x-8 text-white/70 font-mono text-sm pointer-events-auto"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <a href="#solutions" className="hover:text-cyan-400 transition-colors uppercase tracking-wider">SOLUTIONS</a>
+            <a href="#systems" className="hover:text-cyan-400 transition-colors uppercase tracking-wider">SYSTEMS</a>
+            <a href="#academy" className="hover:text-cyan-400 transition-colors uppercase tracking-wider">ACADEMY</a>
+            <a href="#partners" className="hover:text-cyan-400 transition-colors uppercase tracking-wider">PARTNERS</a>
+            <button className="px-6 py-2 border border-cyan-500/50 rounded-full hover:bg-cyan-500/10 transition-all">
+              Thin glass button
+            </button>
+          </motion.nav>
         </div>
       </div>
     </main>
