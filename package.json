@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,json,md}\"",
@@ -15,7 +15,7 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "analyze": "ANALYZE=true next build",
-    "postinstall": "prisma generate || true"
+    // "postinstall": "prisma generate || true"
   },
   "dependencies": {
     "@prisma/client": "^7.0.1",
